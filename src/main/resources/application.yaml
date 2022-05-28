@@ -1,0 +1,13 @@
+spring.application.name: 'ReservationAPI'
+springdoc:
+  packagesToScan: 'sk.cyrilgavala.reservationsApi.web'
+  pathsToMatch: '/api/reservation, /api/reservation/*'
+  swagger-ui.path: '/documentation'
+
+databaseUrl: ${DATABASE_URL:'localhost:27017'}
+# logging levels
+logging.level:
+  org.mongodb: WARN
+  org.springframework: WARN
+  org.springdoc: WARN
+  org.apache: WARN
