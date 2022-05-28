@@ -4,7 +4,7 @@ Simple API built with SpringBoot and MongoDB database.
 
 ## Documentation
 
-Documentation can be found [here](https://root/documentation)//TODO: supply real URL
+Documentation can be found [here](https://cg-reservations-api.herokuapp.com/swagger-ui/index.html)
 
 ## How to run
 
