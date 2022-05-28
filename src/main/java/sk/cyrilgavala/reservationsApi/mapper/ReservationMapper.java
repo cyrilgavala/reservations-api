@@ -14,6 +14,7 @@ public interface ReservationMapper {
 	@Mapping(target = "uuid", ignore = true)
 	Reservation createRequestToModel(CreateReservationRequest request);
 
+	@Mapping(target = "createdAt", ignore = true)
 	Reservation updateRequestToModel(@MappingTarget Reservation model, UpdateReservationRequest request);
 
 	ReservationResponse modelToResponse(Reservation model);
