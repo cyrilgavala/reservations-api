@@ -16,6 +16,6 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
 
 	List<Reservation> findAllByReservationFor(String reservationFor, Sort sort);
 
-	@Query("{ $or: [ {$and: [{'reservationFrom': {$lte: ?0}}, {'reservationTo': {$gt:  ?0}}]}, {$and: [{'reservationFrom': {$lte: ?1}}, {'reservationTo': {$gt:  ?1}}]}] }")
+	@Query("{ $or: [ {$and: [{'reservationFrom': {$lt: ?0}}, {'reservationTo': {$gt:  ?0}}]}, {$and: [{'reservationFrom': {$lt: ?1}}, {'reservationTo': {$gt:  ?1}}]}] }")
 	List<Reservation> findAllBetween(LocalDateTime from, LocalDateTime to);
 }
