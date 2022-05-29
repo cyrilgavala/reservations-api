@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import sk.cyrilgavala.reservationsApi.web.interceptor.RequestLoggingInterceptor;
@@ -44,4 +45,9 @@ public class WebConfiguration implements WebMvcConfigurer {
 		converter.setObjectMapper(builder.build());
 	}
 
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/api/reservation");
+		registry.addMapping("/api/reservation/**");
+	}
 }
