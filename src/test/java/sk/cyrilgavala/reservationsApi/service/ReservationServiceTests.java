@@ -15,6 +15,7 @@ import sk.cyrilgavala.reservationsApi.web.request.UpdateReservationRequest;
 import sk.cyrilgavala.reservationsApi.web.response.ReservationResponse;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,13 +34,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(value = MockitoExtension.class)
 public class ReservationServiceTests {
 
-	private static final LocalDateTime DATE_15_00 = LocalDateTime.of(2022, 5, 20, 15, 0, 0);
-	private static final LocalDateTime DATE_16_00 = LocalDateTime.of(2022, 5, 20, 16, 0, 0);
-	private static final LocalDateTime DATE_17_00 = LocalDateTime.of(2022, 5, 20, 17, 0, 0);
+	private static final LocalDateTime DATE_15_00 = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusDays(1).withHour(15);
+	private static final LocalDateTime DATE_16_00 = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusDays(1).withHour(16);
+	private static final LocalDateTime DATE_17_00 = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusDays(1).withHour(17);
 	private static final String RESERVATION_UUID = "reservationUuid";
 	private static final String USERNAME = "username";
 	private static final String REVERTED_DATES_ERROR_MESSAGE = "Reservation unprocessable: start date is after end date";
 	private static final String RESERVATION_EXISTS_ERROR_MESSAGE = "Reservation unprocessable: covers another reservation";
+	private static final String START_IN_PAST_ERROR_MESSAGE = "Reservation unprocessable: start date is in past";
 	private final CreateReservationRequest createRequest = new CreateReservationRequest();
 	private final UpdateReservationRequest updateRequest = new UpdateReservationRequest();
 
@@ -64,6 +66,21 @@ public class ReservationServiceTests {
 			fail("Reservation exception should be thrown");
 		} catch (ReservationException exception) {
 			assertEquals(REVERTED_DATES_ERROR_MESSAGE, exception.getMessage(), "Different message");
+
+			verifyNoMoreInteractions(repository);
+		}
+	}
+
+	@Test
+	void create_invalidDatesStartInPast_errorThrown() {
+		createRequest.setReservationFrom(DATE_17_00.minusDays(2));
+		createRequest.setReservationTo(DATE_15_00);
+
+		try {
+			service.createReservation(createRequest);
+			fail("Reservation exception should be thrown");
+		} catch (ReservationException exception) {
+			assertEquals(START_IN_PAST_ERROR_MESSAGE, exception.getMessage(), "Different message");
 
 			verifyNoMoreInteractions(repository);
 		}

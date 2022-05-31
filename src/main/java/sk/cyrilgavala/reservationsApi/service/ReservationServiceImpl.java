@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 	private static final String RESERVATION_UNPROCESSABLE_START_DATE_IS_AFTER_END_DATE = "Reservation unprocessable: start date is after end date";
 	private static final String RESERVATION_UNPROCESSABLE_COVERS_ANOTHER_RESERVATION = "Reservation unprocessable: covers another reservation";
+	private static final String RESERVATION_UNPROCESSABLE_START_DATE_IN_PAST = "Reservation unprocessable: start date is in past";
 	private final ReservationRepository repository;
 	private final ReservationMapper mapper;
 
@@ -76,6 +77,11 @@ public class ReservationServiceImpl implements ReservationService {
 		if (from.isAfter(to)) {
 			log.error(RESERVATION_UNPROCESSABLE_START_DATE_IS_AFTER_END_DATE);
 			throw new ReservationException(RESERVATION_UNPROCESSABLE_START_DATE_IS_AFTER_END_DATE);
+		}
+		LocalDateTime now = LocalDateTime.now();
+		if (now.isAfter(from)) {
+			log.error(RESERVATION_UNPROCESSABLE_START_DATE_IN_PAST);
+			throw new ReservationException(RESERVATION_UNPROCESSABLE_START_DATE_IN_PAST);
 		}
 		List<Reservation> reservations = repository.findAllBetween(from, to);
 		reservations.stream()
