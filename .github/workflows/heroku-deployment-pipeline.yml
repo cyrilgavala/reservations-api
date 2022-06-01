@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  buildAndDeploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,6 +21,9 @@ jobs:
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
           arguments: build
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to Heroku
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
