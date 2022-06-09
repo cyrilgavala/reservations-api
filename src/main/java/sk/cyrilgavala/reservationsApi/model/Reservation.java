@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
-@Document(value = "reservations")
+@Document(collection = "reservations")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

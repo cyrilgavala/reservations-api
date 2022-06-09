@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import sk.cyrilgavala.reservationsApi.exception.ReservationException;
 import sk.cyrilgavala.reservationsApi.service.ReservationService;
@@ -34,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test cases for {@link ReservationRestController}.
  */
-@WebMvcTest(ReservationRestController.class)
+@WebMvcTest
+@ActiveProfiles("test")
 public class ReservationRestControllerTests {
 
 	private static final String UUID = "uuid";
@@ -57,6 +60,7 @@ public class ReservationRestControllerTests {
 	private MockMvc mockMvc;
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void get_reservationsForUser_pass() throws Exception {
 		List<ReservationResponse> response = Collections.singletonList(
 			new ReservationResponse(UUID, USERNAME, DATE_15_00, DATE_16_00));
@@ -70,6 +74,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void get_reservationsForUser_passEmptyResponse() throws Exception {
 		List<ReservationResponse> response = Collections.emptyList();
 		when(service.getAllReservationsForUsername(USERNAME)).thenReturn(response);
@@ -82,6 +87,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void get_reservationsForUser_error_400() throws Exception {
 		List<ReservationResponse> response = Collections.emptyList();
 		when(service.getAllReservationsForUsername(USERNAME)).thenReturn(response);
@@ -92,6 +98,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"ADMIN"})
 	void get_reservations_pass() throws Exception {
 		List<ReservationResponse> response = Collections.singletonList(new ReservationResponse(UUID, USERNAME, DATE_15_00, DATE_16_00));
 		when(service.getAllReservations()).thenReturn(response);
@@ -104,6 +111,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void delete_validUuid_pass() throws Exception {
 		doNothing().when(service).deleteReservation(UUID);
 
@@ -113,6 +121,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void delete_blankUuid_error_400() throws Exception {
 		mockMvc.perform(delete("/api/reservation/" + BLANK_USERNAME))
 			.andExpect(status().isBadRequest())
@@ -120,6 +129,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void create_validRequest_pass() throws Exception {
 		CreateReservationRequest request = new CreateReservationRequest(USERNAME, DATE_15_00, DATE_16_00, DATE_15_00);
 		ReservationResponse response = new ReservationResponse(UUID, USERNAME, DATE_15_00, DATE_16_00);
@@ -128,12 +138,13 @@ public class ReservationRestControllerTests {
 		mockMvc.perform(post("/api/reservation")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isOk())
+			.andExpect(status().isCreated())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(content().json(objectMapper.writeValueAsString(response)));
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void create_invalidRequest_error_400() throws Exception {
 		CreateReservationRequest request = new CreateReservationRequest(BLANK_USERNAME, DATE_15_00, DATE_16_00, DATE_15_00);
 
@@ -146,6 +157,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void create_invalidRequest_coveringReservationPresent_422() throws Exception {
 		CreateReservationRequest request = new CreateReservationRequest(USERNAME, DATE_15_00, DATE_16_00, DATE_15_00);
 		when(service.createReservation(request)).thenThrow(new ReservationException(RESERVATION_UNPROCESSABLE_COVERS_ANOTHER_RESERVATION));
@@ -158,6 +170,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void create_invalidRequest_startDateAfterEndDate_422() throws Exception {
 		CreateReservationRequest request = new CreateReservationRequest(USERNAME, DATE_16_00, DATE_15_00, DATE_15_00);
 		when(service.createReservation(request)).thenThrow(new ReservationException(RESERVATION_UNPROCESSABLE_START_DATE_IS_AFTER_END_DATE));
@@ -170,6 +183,7 @@ public class ReservationRestControllerTests {
 	}
 
 	@Test
+	@WithMockUser(username = USERNAME, authorities = {"USER"})
 	void update_validRequest_pass() throws Exception {
 		UpdateReservationRequest request = new UpdateReservationRequest(UUID, USERNAME, DATE_15_00, DATE_16_00);
 		ReservationResponse response = new ReservationResponse(UUID, USERNAME, DATE_15_00, DATE_16_00);

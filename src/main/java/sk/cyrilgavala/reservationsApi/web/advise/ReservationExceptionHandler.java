@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
+import sk.cyrilgavala.reservationsApi.exception.DuplicateUserException;
 import sk.cyrilgavala.reservationsApi.exception.ReservationException;
 
 import javax.validation.ConstraintViolationException;
@@ -25,6 +26,11 @@ public class ReservationExceptionHandler extends ResponseEntityExceptionHandler 
 	@ExceptionHandler(value = {ConstraintViolationException.class})
 	protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
 		return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	@ExceptionHandler(value = {DuplicateUserException.class})
+	protected ResponseEntity<Object> handleDuplicateUserException(DuplicateUserException ex, WebRequest request) {
+		return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
 
 	@Override
