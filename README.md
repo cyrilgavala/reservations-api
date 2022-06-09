@@ -4,7 +4,7 @@ Simple API built with SpringBoot and MongoDB database.
 
 ## Documentation
 
-Documentation can be found [here](https://cg-reservations-api.herokuapp.com/swagger-ui/index.html)
+Documentation can be found [here](https://cg-reservations-api.herokuapp.com/documentation)
 
 ## How to run
 
@@ -20,7 +20,7 @@ git clone https://github.com/cyrilgavala/reservations-api.git .
 2. Open the project with your preferable IDE.
    If you use IntelliJ IDEA, it will offer you a **SpringBoot** runner configuration.
 3. Update the runner by adding environment variable ```DATABASE_URL``` containing
-   URL to your MongoDB database.
+   URL to your MongoDB database and ```JWT_SECRET``` with 512-bit secret.
 4. Run the runner configuration.
 
 ### Tests

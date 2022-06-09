@@ -1,8 +1,8 @@
 package sk.cyrilgavala.reservationsApi.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
  * Test cases for {@link ReservationService}.
  */
 @ExtendWith(value = MockitoExtension.class)
-public class ReservationServiceTests {
+public class ReservationServiceImplTests {
 
 	private static final LocalDateTime DATE_15_00 = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusDays(1).withHour(15);
 	private static final LocalDateTime DATE_16_00 = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusDays(1).withHour(16);
@@ -49,12 +49,8 @@ public class ReservationServiceTests {
 	private transient ReservationRepository repository;
 	@Mock
 	private ReservationMapper mapper;
-	private ReservationService service;
-
-	@BeforeEach
-	void init() {
-		service = new ReservationServiceImpl(repository, mapper);
-	}
+	@InjectMocks
+	private ReservationServiceImpl service;
 
 	@Test
 	void create_invalidDatesFromAfterTo_errorThrown() {

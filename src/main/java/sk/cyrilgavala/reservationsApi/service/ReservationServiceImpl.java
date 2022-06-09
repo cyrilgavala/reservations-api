@@ -1,5 +1,6 @@
 package sk.cyrilgavala.reservationsApi.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import sk.cyrilgavala.reservationsApi.web.request.CreateReservationRequest;
 import sk.cyrilgavala.reservationsApi.web.request.UpdateReservationRequest;
 import sk.cyrilgavala.reservationsApi.web.response.ReservationResponse;
 
-import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,18 +20,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 	private static final String RESERVATION_UNPROCESSABLE_START_DATE_IS_AFTER_END_DATE = "Reservation unprocessable: start date is after end date";
 	private static final String RESERVATION_UNPROCESSABLE_COVERS_ANOTHER_RESERVATION = "Reservation unprocessable: covers another reservation";
 	private static final String RESERVATION_UNPROCESSABLE_START_DATE_IN_PAST = "Reservation unprocessable: start date is in past";
 	private final ReservationRepository repository;
 	private final ReservationMapper mapper;
-
-	@Inject
-	public ReservationServiceImpl(ReservationRepository repository, ReservationMapper mapper) {
-		this.repository = repository;
-		this.mapper = mapper;
-	}
 
 	@Override
 	public ReservationResponse createReservation(CreateReservationRequest request) {
