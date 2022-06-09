@@ -2,6 +2,7 @@ package sk.cyrilgavala.reservationsApi.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import sk.cyrilgavala.reservationsApi.security.TokenAuthenticationFilter;
 
 @RequiredArgsConstructor
+@Configuration
 public class SecurityConfiguration {
 
 	public static final String ADMIN = "ADMIN";
