@@ -48,7 +48,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ReservationResponse> getAllReservations() {
-		return repository.findAll(Sort.by("reservationFrom"))
+		return repository.findAll(Sort.by("reservationFrom").descending())
 			.stream()
 			.map(mapper::modelToResponse)
 			.collect(Collectors.toList());
@@ -57,7 +57,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ReservationResponse> getAllReservationsForUsername(String username) {
-		return repository.findAllByReservationFor(username, Sort.by("reservationFrom"))
+		return repository.findAllByReservationFor(username, Sort.by("reservationFrom").descending())
 			.stream()
 			.map(mapper::modelToResponse)
 			.collect(Collectors.toList());
