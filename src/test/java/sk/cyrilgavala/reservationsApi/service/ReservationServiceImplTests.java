@@ -158,7 +158,7 @@ public class ReservationServiceImplTests {
 
 	@Test
 	void getAllReservations_pass() {
-		when(repository.findAll(Sort.by("reservationFrom")))
+		when(repository.findAll(Sort.by("reservationFrom").descending()))
 			.thenReturn(Arrays.asList(
 				new Reservation(RESERVATION_UUID + "1", USERNAME, DATE_15_00, DATE_16_00, DATE_15_00),
 				new Reservation(RESERVATION_UUID + "2", USERNAME, DATE_16_00, DATE_17_00, DATE_16_00)));
@@ -181,7 +181,7 @@ public class ReservationServiceImplTests {
 
 	@Test
 	void getReservationsForUsername_pass() {
-		when(repository.findAllByReservationFor(USERNAME, Sort.by("reservationFrom")))
+		when(repository.findAllByReservationFor(USERNAME, Sort.by("reservationFrom").descending()))
 			.thenReturn(Arrays.asList(
 				new Reservation(RESERVATION_UUID + "1", USERNAME, DATE_15_00, DATE_16_00, DATE_15_00),
 				new Reservation(RESERVATION_UUID + "2", USERNAME, DATE_16_00, DATE_17_00, DATE_16_00)));
